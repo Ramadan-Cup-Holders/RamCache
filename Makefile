@@ -64,3 +64,6 @@ fix-imports:
 	goimports -w ./cmd
 	goimports -w ./internal
 	goimports -w ./pkg
+
+install-tools:
+	./tools/install.sh

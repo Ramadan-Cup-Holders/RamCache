@@ -1,0 +1,1 @@
+[{"description":"forbidigo: use of `fmt.Println` forbidden by pattern `^(fmt\\.Print(|f|ln)|print|println)$`","severity":"critical","fingerprint":"14DAACC1F5A2789CCA5ACD9B3C7647E0","location":{"path":"cmd/main.go","lines":{"begin":6}}}]

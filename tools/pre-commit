@@ -1,0 +1,17 @@
+#!/bin/sh
+# Format Go code
+make format
+if [ $? -ne 0 ]; then
+    echo "Error: go format failed"
+    exit 1
+fi
+
+
+# Run lint
+make lint
+if [ $? -ne 0 ]; then
+    echo "Error: lint failed"
+    exit 1
+fi
+
+echo "Pre-commit checks passed!"

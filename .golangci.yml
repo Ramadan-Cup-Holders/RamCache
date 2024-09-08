@@ -1,0 +1,70 @@
+run:
+  timeout: 5m
+  issues-exit-code: 2
+  go: "1.22.3"
+issues:
+  exclude-files:
+    - ".*_test.go$"
+linters-settings:
+  gocritic:
+    disabled-checks:
+      - ifElseChain
+  wrapcheck:
+    ignorePackageGlobs:
+      - github.com/hashicorp/go-multierror
+      - database/sql
+      - encoding/json
+
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - typecheck
+    - unused
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - decorder
+    - dogsled
+    - dupl
+    - dupword
+    - durationcheck
+    - errchkjson
+    - errname
+    - errorlint
+    - exhaustive
+    - exportloopref
+    - forbidigo
+    - gocheckcompilerdirectives
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - gofmt
+    - goimports
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosmopolitan
+    - importas
+    - interfacebloat
+    - loggercheck
+    - maintidx
+    - nakedret
+    - nilerr
+    - nilnil
+    - nonamedreturns
+    - nosprintfhostport
+    - prealloc
+    - predeclared
+    - promlinter
+    - reassign
+    - rowserrcheck
+    - tenv
+    - unparam
+    - wastedassign

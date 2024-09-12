@@ -23,23 +23,6 @@ func BenchmarkHashTable_Insert(b *testing.B) {
 	}
 }
 
-// Benchmark for inserting and resizing when the load factor is exceeded
-func BenchmarkHashTable_InsertWithResize(b *testing.B) {
-	hasher := &mockHasher{hashValue: 1} // All keys will hash to the same value
-	initialSize := 8
-	loadFactor := 0.75
-	ht := NewHashTable(hasher, initialSize, loadFactor)
-
-	for i := 0; i < b.N; i++ {
-		key := fmt.Sprintf("key%d", i)
-		value := fmt.Sprintf("value%d", i)
-		ht.Insert(key, value)
-		if ht.getLoadFactor() > loadFactor {
-			ht.resize()
-		}
-	}
-}
-
 // Benchmark for Get operation with a pre-filled hash table
 func BenchmarkHashTable_Get(b *testing.B) {
 	hasher := hash.NewMurmur3()

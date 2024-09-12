@@ -3,9 +3,9 @@ package hash
 import "encoding/binary"
 
 /*
-	MurmurHash3 is a fast, non-cryptographic hash function suitable for general hash-based lookup operations.
-	It was developed by Austin Appleby and is widely used in software applications where fast hashing is needed, such as hash tables, bloom filters, or data deduplication tasks.
-	The algorithm is called "Murmur" because it produces non-randomized, but still "scrambled" hash results, ensuring good distribution of keys for hashing.
+MurmurHash3 is a fast, non-cryptographic hash function suitable for general hash-based lookup operations.
+It was developed by Austin Appleby and is widely used in software applications where fast hashing is needed, such as hash tables, bloom filters, or data deduplication tasks.
+The algorithm is called "Murmur" because it produces non-randomized, but still "scrambled" hash results, ensuring good distribution of keys for hashing.
 */
 type Murmur3 struct {
 	seed      uint32
@@ -15,11 +15,9 @@ type Murmur3 struct {
 	blockSize int
 }
 
-
 func NewMurmur3() *Murmur3 {
 	return NewMurmur3WithSeed(0)
 }
-
 
 func NewMurmur3WithSeed(seed uint32) *Murmur3 {
 	return &Murmur3{
@@ -41,7 +39,6 @@ func (m *Murmur3) mixBlock(h1, k1 uint32) uint32 {
 
 	return h1
 }
-
 
 // Write adds more data to the running hash (via the embedded io.Writer interface)
 func (m *Murmur3) Write(data []byte) (int, error) {
@@ -84,7 +81,6 @@ func (m *Murmur3) Reset() {
 	m.length = 0
 	m.tail = nil
 }
-
 
 // Sum appends the current hash to b and returns the resulting slice
 func (m *Murmur3) Sum(b []byte) []byte {

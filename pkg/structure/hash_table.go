@@ -4,7 +4,6 @@ import (
 	"io"
 )
 
-
 type hasher interface {
 	// Write (via the embedded io.Writer interface) adds more data to the running hash.
 	// It never returns an error.
@@ -28,7 +27,7 @@ type hasher interface {
 }
 
 type entry struct {
-	key string
+	key   string
 	value interface{}
 }
 
@@ -49,10 +48,10 @@ type HashTable struct {
 
 func NewHashTable(hasher hasher, bucketCount int) *HashTable {
 	return &HashTable{
-		hasher: hasher,
+		hasher:      hasher,
 		bucketCount: bucketCount,
-		buckets: make([]*bucket, bucketCount),
-		overFlow: nil,
+		buckets:     make([]*bucket, bucketCount),
+		overFlow:    nil,
 	}
 }
 
@@ -113,15 +112,14 @@ func (h *HashTable) Insert(key string, value interface{}) error {
 
 	if h.overFlow == nil {
 		h.overFlow = &HashTable{
-			hasher: h.hasher,
+			hasher:      h.hasher,
 			bucketCount: h.bucketCount,
-			buckets: make([]*bucket, h.bucketCount),
+			buckets:     make([]*bucket, h.bucketCount),
 		}
 	}
 
 	return h.overFlow.Insert(key, value)
 }
-
 
 func (h *HashTable) Get(key string) (interface{}, bool) {
 	index, err := h.hash(key)
@@ -142,5 +140,3 @@ func (h *HashTable) Get(key string) (interface{}, bool) {
 	}
 	return nil, false
 }
-
-

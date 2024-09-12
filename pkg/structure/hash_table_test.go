@@ -121,7 +121,7 @@ func TestHashTable_InsertAndGet(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			hasher := &mockHasher{hashValue: 1} // Mock hasher that returns fixed hash to simulate collisions
-			ht := NewHashTable(hasher, 8)
+			ht := NewHashTable(hasher, 8, 0.8)
 
 			// Execute the actions
 			for _, action := range tt.actions {
@@ -132,6 +132,59 @@ func TestHashTable_InsertAndGet(t *testing.T) {
 			for key, expectedValue := range tt.expected {
 				value, ok := ht.Get(key)
 				assert.True(t, ok)
+				assert.Equal(t, expectedValue, value)
+			}
+		})
+	}
+}
+
+func TestHashTable_ResizeOnLoadFactor(t *testing.T) {
+	tests := []struct {
+		name          string
+		initialSize   int
+		loadFactor    float64
+		insertions    []struct{ key, value string }
+		expectedSize  int // Expected bucket size after resize
+		expectedItems map[string]interface{}
+	}{
+		{
+			name:        "Resize after exceeding load factor",
+			initialSize: 2,    // Start with 4 buckets
+			loadFactor:  0.40, // Resize when more than 40% of total slots (4*8 = 32 slots) are filled
+			insertions: []struct{ key, value string }{
+				{"key1", "value1"},
+				{"key2", "value2"},
+				{"key3", "value3"},
+				{"key4", "value4"},
+				{"key5", "value5"},
+				{"key6", "value6"},
+				{"key7", "value7"},
+				{"key8", "value8"},
+				{"key9", "value9"}, // This insertion triggers resize (32 slots * 0.75 = 24 slots max before resize)
+			},
+			expectedSize:  4, // Expecting the table to double in size (from 4 to 8 buckets, thus 64 total slots)
+			expectedItems: map[string]interface{}{"key1": "value1", "key2": "value2", "key3": "value3", "key4": "value4", "key5": "value5", "key6": "value6", "key7": "value7", "key8": "value8", "key9": "value9"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			hasher := &mockHasher{hashValue: 1} // Fixed hash to trigger collisions
+			ht := NewHashTable(hasher, tt.initialSize, tt.loadFactor)
+
+			// Insert all keys
+			for _, kv := range tt.insertions {
+				err := ht.Insert(kv.key, kv.value)
+				require.NoError(t, err)
+			}
+
+			// Ensure the table has resized to the expected size
+			assert.Equal(t, tt.expectedSize, ht.bucketCount)
+
+			// Ensure all inserted items can still be retrieved correctly
+			for key, expectedValue := range tt.expectedItems {
+				value, ok := ht.Get(key)
+				assert.True(t, ok, "Expected key %s to be present", key)
 				assert.Equal(t, expectedValue, value)
 			}
 		})
